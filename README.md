@@ -7,7 +7,7 @@ This looks like:
 ![screenshot](screenshot.png)
 
 ## Requirements
-iOS5 or later
+iOS5 or later, ARC
 
 ## Usage
 
