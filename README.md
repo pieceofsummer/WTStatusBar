@@ -16,6 +16,8 @@ iOS5 or later, ARC
 3. Call `[WTStatusBar setStatusText: timeout: animated:]` if you want to automatically hide status after timeout (like showing information message).
 4. Call `[WTStatusBar setProgress:]` or `[WTStatusBar setProgress: animated:]` when you want to change progress bar value. These calls are ignored if status bar is not shown.
 5. Call `[WTStatusBar clearStatus]` or `[WTStatusBar clearStatusAnimated:]` when you want to hide status.
+6. You may adjust statusbar background color with `[WTStatusBar setBackgroundColor:]`. Color is applied with alpha 0.5 or 1.0, depending on statusbar translucent style.
+7. You may adjust text color with `[WTStatusBar setTextColor:]` and progress bar color with `[WTStatusBar setProgressBarColor:]`.
 
 ## License
 MIT
