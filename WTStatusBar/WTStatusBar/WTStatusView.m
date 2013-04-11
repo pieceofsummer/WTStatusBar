@@ -19,7 +19,7 @@
 
 #import "WTStatusView.h"
 
-#define kWTProgressBarHeight 2
+#define kWTProgressBarHeight 3
 
 @implementation WTStatusView
 
@@ -66,11 +66,11 @@
     statusText.textAlignment = NSTextAlignmentCenter;
     statusText.lineBreakMode = NSLineBreakByTruncatingTail;    
     [self addSubview:statusText];
-    
-    progressBar = [[UIView alloc] init];
-    progressBar.opaque = YES;
-    
-    [self addSubview:progressBar];
+
+    progressBar = [[CAGradientLayer alloc] init];
+    progressBar.startPoint = CGPointMake(0, 0.5);
+    progressBar.endPoint = CGPointMake(1, 0.5);
+    [self.layer addSublayer:progressBar];
 }
 
 - (void)dealloc
@@ -98,9 +98,9 @@
     statusText.textColor = color;
 }
 
-- (void)setProgressBarColor:(UIColor *)color
+- (void)setProgressBarColorFrom:(UIColor *)fromColor to:(UIColor *)toColor
 {
-    progressBar.backgroundColor = color;
+    progressBar.colors = @[ (id)fromColor.CGColor, (id)toColor.CGColor ];
 }
 
 - (void)setStatusText:(NSString *)text

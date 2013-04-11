@@ -28,7 +28,8 @@
 
 static UIColor* _textColor = nil;
 static UIColor* _backgroundColor = nil;
-static UIColor* _progressBarColor = nil;
+static UIColor* _progressBarColorFrom = nil;
+static UIColor* _progressBarColorTo = nil;
 static UIFont* _textFont = nil;
 
 @implementation WTStatusBar
@@ -37,7 +38,8 @@ static UIFont* _textFont = nil;
 {
     _textColor = [UIColor colorWithWhite:0.75 alpha:1.0];
     _backgroundColor = [UIColor blackColor];
-    _progressBarColor = [UIColor greenColor];
+    _progressBarColorFrom = [UIColor greenColor];
+    _progressBarColorTo = [UIColor greenColor];
     _textFont = [UIFont boldSystemFontOfSize:13];
 }
 
@@ -81,20 +83,26 @@ static UIFont* _textFont = nil;
 
 + (UIColor*)progressBarColor
 {
-    return _progressBarColor;
+    return _progressBarColorFrom;
 }
 
 + (void)setProgressBarColor:(UIColor *)progressBarColor
 {
-    NSParameterAssert(progressBarColor != nil);
-    _progressBarColor = progressBarColor;
-    
+    [self setProgressBarGradientColorFrom:progressBarColor to:progressBarColor];
+}
+
++ (void)setProgressBarGradientColorFrom:(UIColor *)fromColor to:(UIColor *)toColor
+{
+    NSParameterAssert(fromColor != nil && toColor != nil);
+    _progressBarColorFrom = fromColor;
+    _progressBarColorTo = toColor;
+
     UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
     if (mainWindow != nil)
     {
         WTStatusWindow *statusWindow = (WTStatusWindow*)objc_getAssociatedObject(mainWindow, kWTStatusBarWindow);
         if (statusWindow != nil)
-            [statusWindow.statusView setProgressBarColor:_progressBarColor];
+            [statusWindow.statusView setProgressBarColorFrom:_progressBarColorFrom to:_progressBarColorTo];
     }
 }
 
@@ -171,12 +179,12 @@ static UIFont* _textFont = nil;
         
         objc_setAssociatedObject(mainWindow, kWTStatusBarWindow, statusWindow, OBJC_ASSOCIATION_RETAIN);
     }
-    
+
     // setup window parameters
     
     [statusWindow.statusView setStatusBarColor:_backgroundColor];
     [statusWindow.statusView setStatusTextColor:_textColor];
-    [statusWindow.statusView setProgressBarColor:_progressBarColor];
+    [statusWindow.statusView setProgressBarColorFrom:_progressBarColorFrom to:_progressBarColorTo];
     [statusWindow.statusView setStatusTextFont:_textFont];
     [statusWindow.statusView setStatusText:text];
     [statusWindow.statusView setProgress:0.0];

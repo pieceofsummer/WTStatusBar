@@ -18,17 +18,18 @@
 //  
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface WTStatusView : UIView
 {
     UILabel *statusText;
-    UIView *progressBar;
+    CAGradientLayer *progressBar;
 }
 
 - (void) setStatusTextFont:(UIFont *)font;
 - (void) setStatusBarColor:(UIColor*)color;
 - (void) setStatusTextColor:(UIColor*)color;
-- (void) setProgressBarColor:(UIColor*)color;
+- (void) setProgressBarColorFrom:(UIColor*)fromColor to:(UIColor*)toColor;
 - (void) setProgress:(CGFloat)progress;
 - (void) setStatusText:(NSString*)text;
 

@@ -33,6 +33,7 @@
 
 + (UIColor*) progressBarColor;
 + (void) setProgressBarColor:(UIColor*)progressBarColor;
++ (void) setProgressBarGradientColorFrom:(UIColor*)fromColor to:(UIColor*)toColor;
 
 + (UIFont*) textFont;
 + (void) setTextFont:(UIFont*)textFont;
