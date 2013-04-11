@@ -114,4 +114,8 @@
     progressBar.frame = CGRectMake(0, 0, _progress * CGRectGetWidth(self.bounds), kWTProgressBarHeight);
 }
 
+- (void)setStatusTextFont:(UIFont *)font
+{
+    statusText.font = font;
+}
 @end

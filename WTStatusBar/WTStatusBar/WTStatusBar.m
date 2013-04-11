@@ -29,6 +29,7 @@
 static UIColor* _textColor = nil;
 static UIColor* _backgroundColor = nil;
 static UIColor* _progressBarColor = nil;
+static UIFont* _textFont = nil;
 
 @implementation WTStatusBar
 
@@ -37,6 +38,7 @@ static UIColor* _progressBarColor = nil;
     _textColor = [UIColor colorWithWhite:0.75 alpha:1.0];
     _backgroundColor = [UIColor blackColor];
     _progressBarColor = [UIColor greenColor];
+    _textFont = [UIFont boldSystemFontOfSize:13];
 }
 
 + (UIColor*)textColor
@@ -93,6 +95,25 @@ static UIColor* _progressBarColor = nil;
         WTStatusWindow *statusWindow = (WTStatusWindow*)objc_getAssociatedObject(mainWindow, kWTStatusBarWindow);
         if (statusWindow != nil)
             [statusWindow.statusView setProgressBarColor:_progressBarColor];
+    }
+}
+
++ (UIFont *)textFont
+{
+    return _textFont;
+}
+
++ (void)setTextFont:(UIFont *)textFont
+{
+    NSParameterAssert(textFont != nil);
+    _textFont = textFont;
+    
+    UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
+    if (mainWindow != nil)
+    {
+        WTStatusWindow *statusWindow = (WTStatusWindow*)objc_getAssociatedObject(mainWindow, kWTStatusBarWindow);
+        if (statusWindow != nil)
+            [statusWindow.statusView setStatusTextFont:_textFont];
     }
 }
 
@@ -156,6 +177,7 @@ static UIColor* _progressBarColor = nil;
     [statusWindow.statusView setStatusBarColor:_backgroundColor];
     [statusWindow.statusView setStatusTextColor:_textColor];
     [statusWindow.statusView setProgressBarColor:_progressBarColor];
+    [statusWindow.statusView setStatusTextFont:_textFont];
     [statusWindow.statusView setStatusText:text];
     [statusWindow.statusView setProgress:0.0];
     

@@ -34,6 +34,9 @@
 + (UIColor*) progressBarColor;
 + (void) setProgressBarColor:(UIColor*)progressBarColor;
 
++ (UIFont*) textFont;
++ (void) setTextFont:(UIFont*)textFont;
+
 // ---------------------------------------------------
 // status manipulation
 // ---------------------------------------------------

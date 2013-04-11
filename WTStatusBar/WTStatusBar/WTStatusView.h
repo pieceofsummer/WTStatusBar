@@ -25,11 +25,12 @@
     UIView *progressBar;
 }
 
-- (void) setStatusText:(NSString*)text;
+- (void) setStatusTextFont:(UIFont *)font;
 - (void) setStatusBarColor:(UIColor*)color;
 - (void) setStatusTextColor:(UIColor*)color;
 - (void) setProgressBarColor:(UIColor*)color;
 - (void) setProgress:(CGFloat)progress;
+- (void) setStatusText:(NSString*)text;
 
 @property (nonatomic, assign, setter = setProgress:) CGFloat progress;
 
