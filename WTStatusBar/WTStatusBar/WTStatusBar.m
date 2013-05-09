@@ -144,11 +144,15 @@ static UIFont* _textFont = nil;
                 statusWindow.alpha = 0.0;
             } completion:^(BOOL finished) {
                 statusWindow.hidden = YES;
+                [statusWindow.statusView setProgress:0.0];
+                [statusWindow.statusView setStatusText:nil];
             }];
         }
         else
         {
             statusWindow.hidden = YES;
+            [statusWindow.statusView setProgress:0.0];
+            [statusWindow.statusView setStatusText:nil];
         }
     }
 }
@@ -164,6 +168,12 @@ static UIFont* _textFont = nil;
 }
 
 + (void)setStatusText:(NSString *)text timeout:(NSTimeInterval)timeout animated:(BOOL)animated
+{
+    [WTStatusBar setStatusText:text timeout:timeout animated:animated clearProgress:YES];
+}
+
++ (void)setStatusText:(NSString *)text timeout:(NSTimeInterval)timeout animated:(BOOL)animated
+        clearProgress:(BOOL)clearProgress
 {
     UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
     if (mainWindow == nil) return;
@@ -187,7 +197,9 @@ static UIFont* _textFont = nil;
     [statusWindow.statusView setProgressBarColorFrom:_progressBarColorFrom to:_progressBarColorTo];
     [statusWindow.statusView setStatusTextFont:_textFont];
     [statusWindow.statusView setStatusText:text];
-    [statusWindow.statusView setProgress:0.0];
+    if (clearProgress) {
+        [statusWindow.statusView setProgress:0.0];
+    }
     
     if (animated)
     {
