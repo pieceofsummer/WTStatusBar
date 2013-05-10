@@ -64,12 +64,16 @@
     statusText.textColor = [UIColor colorWithWhite:0.75 alpha:1.0];
     statusText.font = [UIFont boldSystemFontOfSize:13];
     statusText.textAlignment = NSTextAlignmentCenter;
-    statusText.lineBreakMode = NSLineBreakByTruncatingTail;    
+    statusText.lineBreakMode = NSLineBreakByTruncatingTail;
+    statusText.frame = self.bounds;
+    statusText.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self addSubview:statusText];
 
     progressBar = [[CAGradientLayer alloc] init];
     progressBar.startPoint = CGPointMake(0, 0.5);
     progressBar.endPoint = CGPointMake(1, 0.5);
+    progressBar.cornerRadius = 1.5f;
+    progressBar.masksToBounds = YES;
     [self.layer addSublayer:progressBar];
 }
 
@@ -82,9 +86,7 @@
 {
     [super layoutSubviews];
     
-    statusText.frame = self.bounds;
-    
-    [self setProgress:_progress];
+    progressBar.frame = CGRectMake(0, 0, _progress * CGRectGetWidth(self.bounds), kWTProgressBarHeight);
 }
 
 - (void)setStatusBarColor:(UIColor *)color
