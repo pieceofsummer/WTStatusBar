@@ -33,6 +33,10 @@
 
 + (UIColor*) progressBarColor;
 + (void) setProgressBarColor:(UIColor*)progressBarColor;
++ (void) setProgressBarGradientColorFrom:(UIColor*)fromColor to:(UIColor*)toColor;
+
++ (UIFont*) textFont;
++ (void) setTextFont:(UIFont*)textFont;
 
 // ---------------------------------------------------
 // status manipulation
@@ -45,6 +49,8 @@
 + (void) setStatusText:(NSString*)text;
 + (void) setStatusText:(NSString *)text animated:(BOOL)animated;
 + (void) setStatusText:(NSString *)text timeout:(NSTimeInterval)timeout animated:(BOOL)animated;
++ (void) setStatusText:(NSString *)text timeout:(NSTimeInterval)timeout animated:(BOOL)animated
+         clearProgress:(BOOL)clearProgress;
 
 // setProgress doesn't show status, just adjusts progress bar position
 // you need to manually show status bar by calling any of above methods

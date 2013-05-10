@@ -28,7 +28,9 @@
 
 static UIColor* _textColor = nil;
 static UIColor* _backgroundColor = nil;
-static UIColor* _progressBarColor = nil;
+static UIColor* _progressBarColorFrom = nil;
+static UIColor* _progressBarColorTo = nil;
+static UIFont* _textFont = nil;
 
 @implementation WTStatusBar
 
@@ -36,7 +38,9 @@ static UIColor* _progressBarColor = nil;
 {
     _textColor = [UIColor colorWithWhite:0.75 alpha:1.0];
     _backgroundColor = [UIColor blackColor];
-    _progressBarColor = [UIColor greenColor];
+    _progressBarColorFrom = [UIColor greenColor];
+    _progressBarColorTo = [UIColor greenColor];
+    _textFont = [UIFont boldSystemFontOfSize:13];
 }
 
 + (UIColor*)textColor
@@ -79,20 +83,45 @@ static UIColor* _progressBarColor = nil;
 
 + (UIColor*)progressBarColor
 {
-    return _progressBarColor;
+    return _progressBarColorFrom;
 }
 
 + (void)setProgressBarColor:(UIColor *)progressBarColor
 {
-    NSParameterAssert(progressBarColor != nil);
-    _progressBarColor = progressBarColor;
+    [self setProgressBarGradientColorFrom:progressBarColor to:progressBarColor];
+}
+
++ (void)setProgressBarGradientColorFrom:(UIColor *)fromColor to:(UIColor *)toColor
+{
+    NSParameterAssert(fromColor != nil && toColor != nil);
+    _progressBarColorFrom = fromColor;
+    _progressBarColorTo = toColor;
+
+    UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
+    if (mainWindow != nil)
+    {
+        WTStatusWindow *statusWindow = (WTStatusWindow*)objc_getAssociatedObject(mainWindow, kWTStatusBarWindow);
+        if (statusWindow != nil)
+            [statusWindow.statusView setProgressBarColorFrom:_progressBarColorFrom to:_progressBarColorTo];
+    }
+}
+
++ (UIFont *)textFont
+{
+    return _textFont;
+}
+
++ (void)setTextFont:(UIFont *)textFont
+{
+    NSParameterAssert(textFont != nil);
+    _textFont = textFont;
     
     UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
     if (mainWindow != nil)
     {
         WTStatusWindow *statusWindow = (WTStatusWindow*)objc_getAssociatedObject(mainWindow, kWTStatusBarWindow);
         if (statusWindow != nil)
-            [statusWindow.statusView setProgressBarColor:_progressBarColor];
+            [statusWindow.statusView setStatusTextFont:_textFont];
     }
 }
 
@@ -115,11 +144,15 @@ static UIColor* _progressBarColor = nil;
                 statusWindow.alpha = 0.0;
             } completion:^(BOOL finished) {
                 statusWindow.hidden = YES;
+                [statusWindow.statusView setProgress:0.0];
+                [statusWindow.statusView setStatusText:nil];
             }];
         }
         else
         {
             statusWindow.hidden = YES;
+            [statusWindow.statusView setProgress:0.0];
+            [statusWindow.statusView setStatusText:nil];
         }
     }
 }
@@ -136,6 +169,12 @@ static UIColor* _progressBarColor = nil;
 
 + (void)setStatusText:(NSString *)text timeout:(NSTimeInterval)timeout animated:(BOOL)animated
 {
+    [WTStatusBar setStatusText:text timeout:timeout animated:animated clearProgress:YES];
+}
+
++ (void)setStatusText:(NSString *)text timeout:(NSTimeInterval)timeout animated:(BOOL)animated
+        clearProgress:(BOOL)clearProgress
+{
     UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
     if (mainWindow == nil) return;
     
@@ -150,14 +189,17 @@ static UIColor* _progressBarColor = nil;
         
         objc_setAssociatedObject(mainWindow, kWTStatusBarWindow, statusWindow, OBJC_ASSOCIATION_RETAIN);
     }
-    
+
     // setup window parameters
     
     [statusWindow.statusView setStatusBarColor:_backgroundColor];
     [statusWindow.statusView setStatusTextColor:_textColor];
-    [statusWindow.statusView setProgressBarColor:_progressBarColor];
+    [statusWindow.statusView setProgressBarColorFrom:_progressBarColorFrom to:_progressBarColorTo];
+    [statusWindow.statusView setStatusTextFont:_textFont];
     [statusWindow.statusView setStatusText:text];
-    [statusWindow.statusView setProgress:0.0];
+    if (clearProgress) {
+        [statusWindow.statusView setProgress:0.0];
+    }
     
     if (animated)
     {

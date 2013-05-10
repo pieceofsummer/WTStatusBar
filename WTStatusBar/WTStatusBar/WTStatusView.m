@@ -19,7 +19,7 @@
 
 #import "WTStatusView.h"
 
-#define kWTProgressBarHeight 2
+#define kWTProgressBarHeight 3
 
 @implementation WTStatusView
 
@@ -64,13 +64,17 @@
     statusText.textColor = [UIColor colorWithWhite:0.75 alpha:1.0];
     statusText.font = [UIFont boldSystemFontOfSize:13];
     statusText.textAlignment = NSTextAlignmentCenter;
-    statusText.lineBreakMode = NSLineBreakByTruncatingTail;    
+    statusText.lineBreakMode = NSLineBreakByTruncatingTail;
+    statusText.frame = self.bounds;
+    statusText.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self addSubview:statusText];
-    
-    progressBar = [[UIView alloc] init];
-    progressBar.opaque = YES;
-    
-    [self addSubview:progressBar];
+
+    progressBar = [[CAGradientLayer alloc] init];
+    progressBar.startPoint = CGPointMake(0, 0.5);
+    progressBar.endPoint = CGPointMake(1, 0.5);
+    progressBar.cornerRadius = 1.5f;
+    progressBar.masksToBounds = YES;
+    [self.layer addSublayer:progressBar];
 }
 
 - (void)dealloc
@@ -82,9 +86,7 @@
 {
     [super layoutSubviews];
     
-    statusText.frame = self.bounds;
-    
-    [self setProgress:_progress];
+    progressBar.frame = CGRectMake(0, 0, _progress * CGRectGetWidth(self.bounds), kWTProgressBarHeight);
 }
 
 - (void)setStatusBarColor:(UIColor *)color
@@ -98,9 +100,9 @@
     statusText.textColor = color;
 }
 
-- (void)setProgressBarColor:(UIColor *)color
+- (void)setProgressBarColorFrom:(UIColor *)fromColor to:(UIColor *)toColor
 {
-    progressBar.backgroundColor = color;
+    progressBar.colors = @[ (id)fromColor.CGColor, (id)toColor.CGColor ];
 }
 
 - (void)setStatusText:(NSString *)text
@@ -114,4 +116,8 @@
     progressBar.frame = CGRectMake(0, 0, _progress * CGRectGetWidth(self.bounds), kWTProgressBarHeight);
 }
 
+- (void)setStatusTextFont:(UIFont *)font
+{
+    statusText.font = font;
+}
 @end
